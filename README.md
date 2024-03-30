@@ -22,6 +22,10 @@ OBS.:
 chmod +x jfuzzy.sh
 ```
 
+```bash
+./jfuzzy.sh work.fcl
+```
+
 ## References
 
 - [JFUzzy](https://jfuzzylogic.sourceforge.net/html/index.html)
