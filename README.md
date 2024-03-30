@@ -12,6 +12,10 @@
 
 OBS.:
 
-- Na aula anterior a data da entrega deverá ser apresentado para o professor o problema e a modelagem feita para aferição da pertinencia do proproblema e da modelagem. 
+- Na aula anterior a data da entrega deverá ser apresentado para o professor o problema e a modelagem feita para aferição da pertinencia do proproblema e da modelagem.
 
 - A trabalho em sala e a discussão da modelagem, antes da entrega final, fazem parte da avaliação do trabalho.
+
+## References
+
+- [JFUzzy](https://jfuzzylogic.sourceforge.net/html/index.html)
