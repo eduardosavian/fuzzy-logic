@@ -16,6 +16,12 @@ OBS.:
 
 - A trabalho em sala e a discussão da modelagem, antes da entrega final, fazem parte da avaliação do trabalho.
 
+## Run
+
+```bash
+chmod +x jfuzzy.sh
+```
+
 ## References
 
 - [JFUzzy](https://jfuzzylogic.sourceforge.net/html/index.html)
