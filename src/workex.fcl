@@ -1,0 +1,98 @@
+FUNCTION_BLOCK pitstop;	
+
+VAR_INPUT
+	tire_damage : REAL;
+	race_lead : REAL;
+	race_progress : REAL;
+	fuel : REAL;
+END_VAR
+
+VAR_OUTPUT				
+	tip : REAL;
+END_VAR
+
+/*
+	- 0,  0.05: Nenhum
+	- 0.1, 0.5: Levemente desgastado
+	- 0.2, 0.7: Parcialmente desgastado
+	- 0.8, 1.0: Muito desgastado
+*/
+FUZZIFY tire_damage			
+	TERM none           := (0, 0)      (0.05, 0); 
+	TERM slight_damage  := (0.1, 0.1)  (0.5, 0.4);
+	TERM partial_damage := (0.2, 0.3)  (0.7, 0.66);
+	TERM severe_damage  := (0.8, 0.75) (1, 1);
+END_FUZZIFY
+
+/*
+	- 0, 0.333: Pessimo
+	- 0.125, 0.5: Ruim
+	- 0.70, 0.8:  Mediano
+	- 0.85, 0.9:  Bem
+	- 0.9, 1.0:   Excelente
+*/
+FUZZIFY race_lead			
+	TERM horrible := ?;
+	TERM bad      := ?;
+	TERM average  := ?;
+	TERM good     := ?;
+	TERM excelent := ?;
+END_FUZZIFY
+
+/*	
+	- 0.0, 0.33:  Inicio
+	- 0.20, 0.60: Meio
+	- 0.60, 1:    Final
+	- 0.95, 1.0:  Reta Final
+*/
+// TODO: Conditionally set shit based on these params
+FUZZIFY race_progress			
+	TERM begining      := ?;
+	TERM middle        := ?;
+	TERM ending        := ?;
+	TERM final_stretch := ?;
+END_FUZZIFY	
+
+/*
+	- Nivel de combustivel
+	- 0.0,  0.33: Pouco
+	- 0.25, 0.5:  OkLeve
+	- 0.5,  0.75: OkPesado
+	- 0.7,  1.0:  Cheio
+*/
+FUZZIFY fuel
+	TERM nearly_depleted := (0, 0.8)    (0.2, 0.6);
+	TERM ok_light        := (0.25, 0.4) (0.5, 0.25);
+	TERM ok_heavy        := (0.5, 0.15) (0.75, 0.1);
+	TERM full            := (0.7, 0.05) (1.0, 0);
+END_FUZZIFY
+
+/*
+- Urgencia de PitStop
+	- 0, 0.33:  TudoOk
+	- 0.2, 0.5: PodeEsperar
+	- 0.4, 0.7: RiscoElevado
+	- 0.66, 1.0: Urgente
+*/
+DEFUZZIFY pit_stop			
+	TERM no_need   := (0.0, 0.4) () (0.2, 0.4);
+	TERM can_wait  := () () ();
+	TERM high_need := () () ();
+	TERM urgent    := () () ();
+	METHOD : COG;
+	DEFAULT := 0;
+END_DEFUZZIFY
+
+
+// Inference rules
+RULEBLOCK No1
+	AND : MIN;	// Use 'min' for 'and'
+	ACT : MIN;	// Use 'min' activation method
+	ACCU : MAX;	// Use 'max' accumulation method
+
+	RULE 1 : IF service IS poor OR food IS rancid          THEN tip IS cheap;
+	RULE 2 : IF service IS good                            THEN tip IS average; 
+	RULE 3 : IF service IS excellent AND food IS delicious THEN tip IS generous;
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
