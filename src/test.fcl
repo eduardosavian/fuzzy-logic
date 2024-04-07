@@ -51,7 +51,7 @@ FUZZIFY race_progress
 	TERM middle        := ?;
 	TERM ending        := ?;
 	TERM final_stretch := ?;
-END_FUZZIFY	
+END_FUZZIFY
 
 /*
 	- Nivel de combustivel

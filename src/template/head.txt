@@ -1,0 +1,49 @@
+FUNCTION_BLOCK formula1
+
+    VAR_INPUT
+        tire_condition : REAL;
+        fuel_level : REAL;
+        race_progress : REAL;
+        race_position : REAL;
+    END_VAR
+
+    VAR_OUTPUT
+        pitstop_necessity : REAL;
+    END_VAR
+
+    FUZZIFY tire_condition
+        TERM degraded          := (0,0) (0,1) (25,0);
+        TERM compromised       := (0,0) (25,1) (50,0);
+        TERM competitive       := (25,0) (50,1) (75,0);
+        TERM optimal           := (50,0) (75,1) (100,0);
+        TERM prime_performance := (75,0) (100,1);
+    END_FUZZIFY
+
+    FUZZIFY fuel_level
+        TERM low      := (0,0) (0,1) (35,0);
+        TERM half     := (15,0) (35,1) (65,1) (85,0);
+        TERM full     := (65,0) (100,1) (100,0);
+    END_FUZZIFY
+
+    FUZZIFY race_progress
+        TERM start         := (0,0) (0,1) (40,0);
+        TERM middle        := (20,0) (33,1) (57,1) (80,0);
+        TERM end           := (70,0) (95,1) (100,0);
+        TERM final_stretch := (95,0) (100,1) (100,0);
+    END_FUZZIFY
+
+    FUZZIFY race_position
+        TERM excellent := (0,0) (0,1) (5,0);
+        TERM good      := (0,0) (5,1) (12,0);
+        TERM poor      := (8,0) (20,1) (20,0);
+    END_FUZZIFY
+
+    DEFUZZIFY pitstop_necessity
+        TERM all_ok    := (0,0) (0,1) (33,0);
+        TERM can_wait  := (20,0) (50,1) (65,0);
+        TERM high_risk := (40,0) (70,1) (89,0);
+        TERM urgent    := (66,0) (100,1) (100,0);
+    END_DEFUZZIFY
+
+
+    RULEBLOCK first

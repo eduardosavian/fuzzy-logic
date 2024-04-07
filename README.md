@@ -23,45 +23,50 @@ chmod +x jfuzzy.sh
 ```
 
 ```bash
-./jfuzzy.sh work.fcl
+./jfuzzy.sh -e src/formula1.fcl 5.0 5.0 5.0 5.0
 ```
 
 ## Theory
 
 ### Qualificadores
 
-#### Desgaste do Pneu (0 - 1.0)
+#### Tyre Condition (1.0 - 0.0)
 
-- 0, 0.05:  Nenhum
-- 0.1, 0.5: Levemente desgastado
-- 0.2, 0.7: Parcialmente desgastado
-- 0.8, 1.0: Muito desgastado
+- Prime Performance : 1.0 - 0.8
+- Optimal : 0.8 - 0.7
+- Competitive 0.7 - 0.5
+- Compromised : 0.5 - 0.05
+- Degraded : 0.05 - 0.0
 
-#### Posicao na corrida (0 - 1.0)
+### Race Progress (1.0 - 0.0)
 
--(C - p)/p
--C := numero de participantes
--p := posicao atual
+- Start: 1.0 - 0.33
+- Middle: 0.20 - 0.60
+- End: 0.60 - 0.0
+- Final Straight: 0.95 - 1.0
 
-- 0, 0.333: Pessimo
-- 0.125, 0.5: Ruim
-- 0.70, 0.8:  Mediano
-- 0.85, 0.9:  Bem
-- 0.9, 1.0:   Excelente
+### Fuel Level (1.0 - 0.0)
 
-#### Progresso da corrida
+- Low: 1.0 - 0.33
+- Ok (Light): 0.25 - 0.5
+- Ok (Heavy): 0.5 - 0.75
+- Full: 0.7 - 1.0
 
-- 0.0, 0.33:  Inicio
-- 0.20, 0.60: Meio
-- 0.60, 1:    Final
-- 0.95, 1.0:  Reta Final
+### Performance Rating
 
-#### Nivel de combustivel
+- Poor: 0 - 10
+- Fair: 5 - 15
+- Average: 10 - 20
+- Good: 15 - 25
+- Excellent: 20 - 30
 
-- 0.0,  0.33: Pouco
-- 0.25, 0.5:  OkLeve
-- 0.5,  0.75: OkPesado
-- 0.7,  1.0:  Cheio
+### Race Position (1.0 - 0.0)
+
+- Terrible: 1.0 - 0.333
+- Bad: 0.125 - 0.5
+- Average: 0.70 - 0.8
+- Good: 0.85 - 0.9
+- Excellent: 0.9 - 1.0
 
 ### Saida
 
