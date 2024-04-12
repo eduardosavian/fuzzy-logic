@@ -1,0 +1,49 @@
+<project name="formula1-fuzzy" basedir="." default="build">
+
+    <!-- Define properties -->
+    <property name="jfuzzy_path" location="libs/jfuzzy.jar"/>
+    <property name="src.dir" location="src"/>
+    <property name="build.dir" location="build"/>
+    <property name="jar.file" value="formula1-fuzzy.jar"/>
+    <property name="main.class" value="Formula1"/>
+
+    <!-- Define classpath -->
+    <path id="classpath">
+        <pathelement location="${jfuzzy_path}"/>
+        <pathelement path="${java.class.path}"/>
+        <pathelement location="${build.dir}"/>
+    </path>
+
+    <!-- Compile task -->
+    <target name="compile">
+        <mkdir dir="${build.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false" classpathref="classpath" debug="true" nowarn="true"/>
+    </target>
+
+    <!-- Clean task -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete file="${jar.file}"/>
+    </target>
+
+    <!-- Initialize task -->
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <!-- Build task -->
+    <target name="build" depends="clean, init, compile, jar">
+        <echo message="Build completed"/>
+    </target>
+
+    <!-- Jar task -->
+    <target name="jar">
+        <jar destfile="${jar.file}" basedir="${build.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+                <!-- Add Class-Path entry for jfuzzy.jar -->
+                <attribute name="Class-Path" value="${jfuzzy_path}"/>
+            </manifest>
+        </jar>
+    </target>
+</project>
