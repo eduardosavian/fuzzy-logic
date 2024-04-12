@@ -13,7 +13,7 @@ FUNCTION_BLOCK formula1
 
     FUZZIFY tire_condition
         TERM degraded          := (0,0) (0,1) (25,0);
-        TERM compromised       := (0,0) (25,1) (50,0);
+        TERM light_damage       := (0,0) (25,1) (50,0);
         TERM competitive       := (25,0) (50,1) (75,0);
         TERM optimal           := (50,0) (75,1) (100,0);
         TERM prime_performance := (75,0) (100,1);

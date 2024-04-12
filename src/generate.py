@@ -15,10 +15,10 @@ race_position_values = {'excellent': 0, 'good': 30, 'poor': 60}
 
 # Define the output terms
 output_terms = {
-    'all_ok': (-200, 20),
+    'all_ok': (-1000, 20),
     'can_wait': (20, 50),
     'high_risk': (50, 80),
-    'urgent': (80, 200),
+    'urgent': (80, 1000),
 }
 
 # Generate combinations of inputs
