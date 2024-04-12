@@ -34,6 +34,6 @@ public class Formula1 {
         double pitstop_necessity = fb.getVariable("pitstop_necessity").getValue();
 
         // Output the result
-        System.out.println("Pitstop necessity: " + pitstop_necessity);
+        System.out.println("\nPitstop necessity: " + pitstop_necessity);
     }
 }
