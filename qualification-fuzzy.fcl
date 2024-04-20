@@ -1,0 +1,119 @@
+FUNCTION_BLOCK prioritizer	// Block definition
+
+// Define input variables
+VAR_INPUT
+	complexidade: REAL;
+	importancia : REAL;
+	FTE : REAL;
+END_VAR
+
+// Define output variable
+VAR_OUTPUT
+	priorizacao : REAL;
+END_VAR
+
+// Fuzzify input variable 'complexidade': {'facil', 'medio' , 'complexo','muito_complexo'}
+FUZZIFY complexidade
+	TERM facil := (0, 1) (10, 0) ;
+	TERM medio := (10, 0) (13,1) (16,1) (20,0);
+	TERM complexo := (19, 0) (23, 1) (27, 1) (30, 0);
+	TERM muito_complexo := (28, 0) (30, 1);
+END_FUZZIFY
+
+// Fuzzify input variable 'importancia': { 'backlog', 'chamado','gerencia' }
+FUZZIFY importancia
+	TERM backlog := (0, 1) (10, 0);
+	TERM chamado := (10,0) (18,1) (22,1) (30,0);
+	TERM gerencia := (23,0) (31,1);
+END_FUZZIFY
+
+
+// Fuzzify input variable 'FTE': { 'muito_ruim', 'ruim', 'medio', 'bom', 'excelente'}
+FUZZIFY FTE
+	TERM muito_ruim := (0, 1) (0.05, 0);
+	TERM ruim := (0.05, 0) (0.10, 1) (0.15, 1) (0.20, 0);
+	TERM medio := (0.20, 0) (0.30, 1) (0.40, 1) (0.50, 0);
+	TERM bom := (0.50, 0) (0.60, 1) (0.80, 1) (1, 0) ;
+	TERM excelente := (0.90,0) (1,1);
+END_FUZZIFY
+
+// Defzzzify output variable 'priorizacao' : {'baixa', 'medio', 'alta', 'muito_alta'}
+DEFUZZIFY priorizacao
+	TERM baixa := (0,1) (20,0);
+	TERM medio := (20,0) (28,1) (32,1) (40,0);
+	TERM alta := (40,0) (55,1) (65,1) (80,0);
+	TERM muito_alta := (80,0) (100,1);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+// Inference rules
+RULEBLOCK No1
+	AND : MIN;	// Use 'min' for 'and'
+	ACT : MIN;	// Use 'min' activation method
+	ACCU : MAX;	// Use 'max' accumulation method
+
+	RULE 1 :  IF (complexidade IS complexo) AND (importancia IS backlog) AND (FTE IS muito_ruim) THEN priorizacao IS baixa;
+	RULE 2 :  IF (complexidade IS complexo) AND (importancia IS chamado) AND (FTE IS muito_ruim) THEN priorizacao IS baixa;
+	RULE 3 :  IF (complexidade IS complexo) AND (importancia IS gerencia) AND (FTE IS muito_ruim) THEN priorizacao IS medio;
+	RULE 4 :  IF (complexidade IS complexo) AND (importancia IS backlog) AND (FTE IS ruim) THEN priorizacao IS baixa;
+	RULE 5 :  IF (complexidade IS complexo) AND (importancia IS chamado) AND (FTE IS ruim) THEN priorizacao IS baixa;
+	RULE 6 :  IF (complexidade IS complexo) AND (importancia IS gerencia) AND (FTE IS ruim) THEN priorizacao IS medio;
+	RULE 7 :  IF (complexidade IS complexo) AND (importancia IS backlog) AND (FTE IS medio) THEN priorizacao IS baixa;
+	RULE 8 :  IF (complexidade IS complexo) AND (importancia IS chamado) AND (FTE IS medio) THEN priorizacao IS baixa;
+	RULE 9 :  IF (complexidade IS complexo) AND (importancia IS gerencia) AND (FTE IS medio) THEN priorizacao IS alta;
+	RULE 10 : IF (complexidade IS complexo) AND (importancia IS backlog) AND (FTE IS bom) THEN priorizacao IS baixa;
+	RULE 11 : IF (complexidade IS complexo) AND (importancia IS chamado) AND (FTE IS bom) THEN priorizacao IS medio;
+	RULE 12 : IF (complexidade IS complexo) AND (importancia IS gerencia) AND (FTE IS bom) THEN priorizacao IS alta;
+	RULE 13 : IF (complexidade IS complexo) AND (importancia IS backlog) AND (FTE IS excelente) THEN priorizacao IS alta;
+	RULE 14 : IF (complexidade IS complexo) AND (importancia IS chamado) AND (FTE IS excelente) THEN priorizacao IS muito_alta;
+	RULE 15 : IF (complexidade IS complexo) AND (importancia IS gerencia) AND (FTE IS excelente) THEN priorizacao IS muito_alta;
+	RULE 16 : IF (complexidade IS facil) AND (importancia IS backlog) AND (FTE IS muito_ruim) THEN priorizacao IS baixa;
+	RULE 17 : IF (complexidade IS facil) AND (importancia IS chamado) AND (FTE IS muito_ruim) THEN priorizacao IS baixa;
+	RULE 18 : IF (complexidade IS facil) AND (importancia IS gerencia) AND (FTE IS muito_ruim) THEN priorizacao IS alta;
+	RULE 19 : IF (complexidade IS facil) AND (importancia IS backlog) AND (FTE IS ruim) THEN priorizacao IS baixa;
+	RULE 20 : IF (complexidade IS facil) AND (importancia IS chamado) AND (FTE IS ruim) THEN priorizacao IS medio;
+	RULE 21 : IF (complexidade IS facil) AND (importancia IS gerencia) AND (FTE IS ruim) THEN priorizacao IS muito_alta;
+	RULE 22 : IF (complexidade IS facil) AND (importancia IS backlog) AND (FTE IS medio) THEN priorizacao IS medio;
+	RULE 23 : IF (complexidade IS facil) AND (importancia IS chamado) AND (FTE IS medio) THEN priorizacao IS medio;
+	RULE 24 : IF (complexidade IS facil) AND (importancia IS gerencia) AND (FTE IS medio) THEN priorizacao IS muito_alta;
+	RULE 25 : IF (complexidade IS facil) AND (importancia IS backlog) AND (FTE IS bom) THEN priorizacao IS alta;
+	RULE 26 : IF (complexidade IS facil) AND (importancia IS chamado) AND (FTE IS bom) THEN priorizacao IS muito_alta;
+	RULE 27 : IF (complexidade IS facil) AND (importancia IS gerencia) AND (FTE IS bom) THEN priorizacao IS muito_alta;
+	RULE 28 : IF (complexidade IS facil) AND (importancia IS backlog) AND (FTE IS excelente) THEN priorizacao IS muito_alta;
+	RULE 29 : IF (complexidade IS facil) AND (importancia IS chamado) AND (FTE IS excelente) THEN priorizacao IS muito_alta;
+	RULE 30 : IF (complexidade IS facil) AND (importancia IS gerencia) AND (FTE IS excelente) THEN priorizacao IS muito_alta;
+	RULE 31 : IF (complexidade IS medio) AND (importancia IS backlog) AND (FTE IS muito_ruim) THEN priorizacao IS baixa;
+	RULE 32 : IF (complexidade IS medio) AND (importancia IS chamado) AND (FTE IS muito_ruim) THEN priorizacao IS baixa;
+	RULE 33 : IF (complexidade IS medio) AND (importancia IS gerencia) AND (FTE IS muito_ruim) THEN priorizacao IS alta;
+	RULE 34 : IF (complexidade IS medio) AND (importancia IS backlog) AND (FTE IS ruim) THEN priorizacao IS baixa;
+	RULE 35 : IF (complexidade IS medio) AND (importancia IS chamado) AND (FTE IS ruim) THEN priorizacao IS baixa;
+	RULE 36 : IF (complexidade IS medio) AND (importancia IS gerencia) AND (FTE IS ruim) THEN priorizacao IS muito_alta;
+	RULE 37 : IF (complexidade IS medio) AND (importancia IS backlog) AND (FTE IS medio) THEN priorizacao IS baixa;
+	RULE 38 : IF (complexidade IS medio) AND (importancia IS chamado) AND (FTE IS medio) THEN priorizacao IS medio;
+	RULE 39 : IF (complexidade IS medio) AND (importancia IS gerencia) AND (FTE IS medio) THEN priorizacao IS muito_alta;
+	RULE 40 : IF (complexidade IS medio) AND (importancia IS backlog) AND (FTE IS bom) THEN priorizacao IS alta;
+	RULE 41 : IF (complexidade IS medio) AND (importancia IS chamado) AND (FTE IS bom) THEN priorizacao IS alta;
+	RULE 42 : IF (complexidade IS medio) AND (importancia IS gerencia) AND (FTE IS bom) THEN priorizacao IS muito_alta;
+	RULE 43 : IF (complexidade IS medio) AND (importancia IS backlog) AND (FTE IS excelente) THEN priorizacao IS muito_alta;
+	RULE 44 : IF (complexidade IS medio) AND (importancia IS chamado) AND (FTE IS excelente) THEN priorizacao IS muito_alta;
+	RULE 45 : IF (complexidade IS medio) AND (importancia IS gerencia) AND (FTE IS excelente) THEN priorizacao IS muito_alta;
+	RULE 46 : IF (complexidade IS muito_complexo) AND (importancia IS backlog) AND (FTE IS muito_ruim) THEN priorizacao IS baixa;
+	RULE 47 : IF (complexidade IS muito_complexo) AND (importancia IS chamado) AND (FTE IS muito_ruim) THEN priorizacao IS baixa;
+	RULE 48 : IF (complexidade IS muito_complexo) AND (importancia IS gerencia) AND (FTE IS muito_ruim) THEN priorizacao IS baixa;
+	RULE 49 : IF (complexidade IS muito_complexo) AND (importancia IS backlog) AND (FTE IS ruim) THEN priorizacao IS baixa;
+	RULE 50 : IF (complexidade IS muito_complexo) AND (importancia IS chamado) AND (FTE IS ruim) THEN priorizacao IS baixa;
+	RULE 51 : IF (complexidade IS muito_complexo) AND (importancia IS gerencia) AND (FTE IS ruim) THEN priorizacao IS medio;
+	RULE 52 : IF (complexidade IS muito_complexo) AND (importancia IS backlog) AND (FTE IS medio) THEN priorizacao IS baixa;
+	RULE 53 : IF (complexidade IS muito_complexo) AND (importancia IS chamado) AND (FTE IS medio) THEN priorizacao IS baixa;
+	RULE 54 : IF (complexidade IS muito_complexo) AND (importancia IS gerencia) AND (FTE IS medio) THEN priorizacao IS medio;
+	RULE 55 : IF (complexidade IS muito_complexo) AND (importancia IS backlog) AND (FTE IS bom) THEN priorizacao IS baixa;
+	RULE 56 : IF (complexidade IS muito_complexo) AND (importancia IS chamado) AND (FTE IS bom) THEN priorizacao IS medio;
+	RULE 57 : IF (complexidade IS muito_complexo) AND (importancia IS gerencia) AND (FTE IS bom) THEN priorizacao IS medio;
+	RULE 58 : IF (complexidade IS muito_complexo) AND (importancia IS backlog) AND (FTE IS excelente) THEN priorizacao IS medio;
+	RULE 59 : IF (complexidade IS muito_complexo) AND (importancia IS chamado) AND (FTE IS excelente) THEN priorizacao IS alta;
+	RULE 60 : IF (complexidade IS muito_complexo) AND (importancia IS gerencia) AND (FTE IS excelente) THEN priorizacao IS alta;
+
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
